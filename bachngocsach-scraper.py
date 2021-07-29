@@ -18,10 +18,11 @@ if __name__ == '__main__':
     book.add_author("Nhĩ Căn")
 
     myTitle = soup.find("h1", id="chuong-title")
+    myInfo = soup.find("div", id="info")
 
     myContent = soup.find("div", id="noi-dung")
 
-    CHAPTERS = 100 
+    CHAPTERS = 100
     intro = epub.EpubHtml(title="Introduction",
                           file_name='intro.xhtml', lang='en')
     intro.content = "<h1>About this book</h1><p>This is my web scraping epub book for my favorite novel</p>"
@@ -35,8 +36,8 @@ if __name__ == '__main__':
                 url = base_url + next_chapter_button['href']
                 html = requests.get(url)
                 soup = BeautifulSoup(html.content, "html.parser")
-
                 myTitle = soup.find("h1", id="chuong-title")
+                myInfo = soup.find("div", id="info")
                 myContent = soup.find("div", id="noi-dung")
             except TypeError:
                 print("THE END!")
@@ -45,13 +46,12 @@ if __name__ == '__main__':
             chap = 1500 + i
             print(f"Processing {chap}")
             myDict[f"chap{chap}"] = epub.EpubHtml(title=str(myTitle.get_text()),
-                                                  file_name=f"chap{chap}.xhtml", content=str(myTitle) + str(myContent))
+                                                  file_name=f"chap{chap}.xhtml", content=str(myTitle)  + str(myInfo)+ str(myContent))
         else:
             chap = 1500 + i
             print(f"Processing {chap}")
             myDict[f"chap{chap}"] = epub.EpubHtml(title=str(myTitle.get_text()),
-                                                  file_name=f"chap{chap}.xhtml", content=str(myTitle) + str(myContent))
-
+                                                  file_name=f"chap{chap}.xhtml", content=str(myTitle) + str(myInfo)+ str(myContent))
 
         book.add_item(myDict[f"chap{chap}"])
 
