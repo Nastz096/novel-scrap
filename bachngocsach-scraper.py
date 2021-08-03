@@ -17,10 +17,6 @@ if __name__ == '__main__':
     book.set_language("vn")
     book.add_author("Nhĩ Căn")
 
-    myTitle = soup.find("h1", id="chuong-title")
-    myInfo = soup.find("div", id="info")
-
-    myContent = soup.find("div", id="noi-dung")
 
     CHAPTERS = 100
     intro = epub.EpubHtml(title="Introduction",
@@ -49,6 +45,11 @@ if __name__ == '__main__':
                                                   file_name=f"chap{chap}.xhtml", content=str(myTitle)  + str(myInfo)+ str(myContent))
         else:
             chap = 1500 + i
+
+            myTitle = soup.find("h1", id="chuong-title")
+            myInfo = soup.find("div", id="info")
+
+            myContent = soup.find("div", id="noi-dung")
             print(f"Processing {chap}")
             myDict[f"chap{chap}"] = epub.EpubHtml(title=str(myTitle.get_text()),
                                                   file_name=f"chap{chap}.xhtml", content=str(myTitle) + str(myInfo)+ str(myContent))
