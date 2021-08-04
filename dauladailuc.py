@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 from ebooklib import epub
 import requests
 base_url = "https://www.xinshuhaige.net"
-url = "https://www.xinshuhaige.net/57876/773621.html"
+url = "https://www.xinshuhaige.net/57876/1100446.html"
 html = requests.get(url)
 soup = BeautifulSoup(html.content, "html.parser")
 
@@ -18,7 +18,7 @@ intro = epub.EpubHtml(title="Introduction",
 intro.content = "<h1>About this book</h1><p>This is my web scraping epub book for my favorite novel Dau la dai luc IV</p>"
 book.add_item(intro)
 
-CHAPTERS = 10
+CHAPTERS = 11
 myDict = {}
 for i in range(CHAPTERS):
     chap = 39 + i

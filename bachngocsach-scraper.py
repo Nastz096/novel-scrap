@@ -2,23 +2,27 @@ import requests
 from ebooklib import epub
 from bs4 import BeautifulSoup
 base_url = "https://bachngocsach.com"
-url = "https://bachngocsach.com/reader/nhat-niem-vinh-hang/zkgd"
-# inputURL = input("Enter your novel's chapter path: ")
+url = input("Copy your URL: ")
 html = requests.get(url)
 soup = BeautifulSoup(html.content, "html.parser")
 
+book_identifier = input("Enter your book identifier: ")
+book_title = input("Enter your book title: ")
+book_author = input("Enter your book author: ")
 if __name__ == '__main__':
 
     book = epub.EpubBook()
 
 # set metadata
-    book.set_identifier("nnvhnc123")
-    book.set_title("Nhất niệm vĩnh hằng")
+    book.set_identifier(book_identifier)
+    book.set_title(book_title)
     book.set_language("vn")
-    book.add_author("Nhĩ Căn")
+    book.add_author(book_author)
+    beginningChapter = int(input("Enter your beginning Chapter: ")) - 1
 
+    file_name = input("Enter your ebook file name: ")
 
-    CHAPTERS = 100
+    CHAPTERS = int(input("How many chapters do you want? "))
     intro = epub.EpubHtml(title="Introduction",
                           file_name='intro.xhtml', lang='en')
     intro.content = "<h1>About this book</h1><p>This is my web scraping epub book for my favorite novel</p>"
@@ -39,12 +43,12 @@ if __name__ == '__main__':
                 print("THE END!")
                 break
 
-            chap = 1500 + i
+            chap = beginningChapter + i
             print(f"Processing {chap}")
             myDict[f"chap{chap}"] = epub.EpubHtml(title=str(myTitle.get_text()),
-                                                  file_name=f"chap{chap}.xhtml", content=str(myTitle)  + str(myInfo)+ str(myContent))
+                                                  file_name=f"chap{chap}.xhtml", content=str(myTitle) + str(myInfo) + str(myContent))
         else:
-            chap = 1500 + i
+            chap = beginningChapter + i
 
             myTitle = soup.find("h1", id="chuong-title")
             myInfo = soup.find("div", id="info")
@@ -52,7 +56,7 @@ if __name__ == '__main__':
             myContent = soup.find("div", id="noi-dung")
             print(f"Processing {chap}")
             myDict[f"chap{chap}"] = epub.EpubHtml(title=str(myTitle.get_text()),
-                                                  file_name=f"chap{chap}.xhtml", content=str(myTitle) + str(myInfo)+ str(myContent))
+                                                  file_name=f"chap{chap}.xhtml", content=str(myTitle) + str(myInfo) + str(myContent))
 
         book.add_item(myDict[f"chap{chap}"])
 
@@ -102,4 +106,4 @@ nav[epub|type~='toc'] > ol > li > ol > li {
     book.add_item(nav_css)
     book.spine = ['nav', intro] + myChaptersContent
 
-    epub.write_epub("nhat-niem-vinh-hang.epub", book, {})
+    epub.write_epub(f"{file_name}.epub", book, {})
